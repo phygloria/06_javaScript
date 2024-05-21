@@ -1,8 +1,21 @@
+
+const fileInput = document.getElementById("file") 
+const modeBtn = document.getElementById("mode-btn")
+const destroyBtn = document.getElementById("destroy-btn")
+const eragerBtn = document.getElementById("erager-btn")
+const colorOptions = Array.from(
+    document.getElementsByClassName("color-option")
+);
+const color = document.getElementById("color");
 const lineWidth = document.getElementById("line-width");
 const canvas = document.querySelector("canvas");
 const cxt = canvas.getContext("2d");
-canvas.width = 800;
-canvas.height = 800;
+
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 800;
+
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
 cxt.lineWidth = lineWidth.value;
 
 //빠르게 정사각형 색칠하고 대각선 나열하기
@@ -92,6 +105,8 @@ cxt.lineWidth = lineWidth.value;
 // 마우스가 클릭하고 움직이고 끝날때까지 그리기
 
 let isPainting = false;
+let isFilling = false;
+
 function onMove(event) {
     if(isPainting){
         cxt.lineTo(event.offsetX, event.offsetY);
@@ -114,10 +129,77 @@ function onLineWidthChange(event){
     cxt.lineWidth = event.target.value;
 }
 
+
+function onColorChange(event){
+    // console.log();
+    cxt.strokeStyle = event.target.value;
+    cxt.fillStyle = event.target.value;
+}
+
+
+function onColorClick(event){
+    // console.dir(event.target.dataset.color);
+    const colorValue = event.target.dataset.color;
+    cxt.strokeStyle = colorValue;
+    cxt.fillStyle = colorValue;
+    color.value = colorValue;
+}
+
+
+function onModeClick(){
+    if(isFilling){
+        isFilling = false
+        modeBtn.innerText = "Fill"
+    }else {
+        isFilling = true
+        modeBtn.innerText = "Draw"
+    }
+}
+
+function onCavasClick(){
+    if(isFilling){
+        cxt.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    } 
+}
+
+
+function onDestroyClick(){
+    cxt.fillStyle = "white"
+    cxt.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+}
+
+function onEragerClick(){
+    cxt.strokeStyle = "white";
+    isFilling = false;
+    modeBtn.innerText = "Fill"
+}
+
+function onFileChange(event){
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file)
+    console.log(url);
+    const image = new Image()
+    image.src = url;
+    image.onload = function(){
+        cxt.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+        fileInput.value = null;
+    }
+}
+
+
 canvas.addEventListener("mousemove", onMove);
 canvas.addEventListener("mousedown", startPainting);
 canvas.addEventListener("mouseup", cancelPainting);
 canvas.addEventListener("mouseleave", cancelPainting);
-
+canvas.addEventListener("click", onCavasClick);
 
 lineWidth.addEventListener("change", onLineWidthChange);
+
+color.addEventListener("change", onColorChange)
+colorOptions.forEach(color => color.addEventListener("click", onColorClick));
+
+modeBtn.addEventListener("click", onModeClick);
+destroyBtn.addEventListener("click", onDestroyClick);
+eragerBtn.addEventListener("click", onEragerClick);
+
+fileInput.addEventListener("change", onFileChange)
