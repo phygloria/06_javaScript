@@ -27,7 +27,7 @@ var student = {
         return `${this.name}(은)는 ${this.age}세입니다.`;
     },
     test : () => {
-        return `${this.name}(은)는 ${this.age}세입니다.`;
+        return `${student.name}(은)는 ${student.age}세입니다.`;
     }
 };
 
