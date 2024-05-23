@@ -1,0 +1,37 @@
+//누락된 깃 확인
+git log --pretty=format:"%h = %an , %ar : %s" --graph
+
+* df8a3d9 = phygloria , 2 minutes ago : aaaaa
+* 49e5d15 = renew , 25 hours ago : 0522
+* 6dcc260 = pim , 2 days ago : 0521
+* c218966 = pim , 3 days ago : first commit
+
+//해시코드 하나씩 접속
+git rebase -i --rebase-merges 해시코드
+
+
+vim 창이 뜨면 i(insert)를 입력하고 
+
+pick -> edit로 변경
+
+esc를 눌러 input 모드를 빠져나와 :wq 를 입력하여 저장
+
+
+
+	git commit --amend --author="본인 이름 <본인 이메일>"
+    
+    ex) git commit --amend --author="phygloria <phygloria@gmail.com>"
+
+vim 창이 떴을 때 commit 내용을 수정하고 싶다면 i 입력 후 수정, esc → :wq!
+수정할 내용이 없다면 esc → :wq!
+
+다음 대상을 commit 하기 위해
+
+	git rebase --continue
+commit 할 개수 만큼 6~8 반복
+
+commit이 모두 완료되면 강제 push
+
+	git push origin +브랜치이름
+    
+    ex) git push origin +master
